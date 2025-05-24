@@ -157,11 +157,8 @@ const Xchange = () => {
     if (!hasMore) return <Text style={styles.noMore}>No more items</Text>;
     if (searchQuery.trim() !== '') return null;
 
-    return (
-      <TouchableOpacity onPress={fetchData} style={styles.loadMore}>
-        <Text style={styles.loadMoreText}>Load More</Text>
-      </TouchableOpacity>
-    );
+  return null; // No button or footer
+
   };
 
   const renderItem = ({ item }) => (
