@@ -12,10 +12,14 @@ import {
   ScrollView,
   Modal,
   ActivityIndicator,
+  ImageBackground
 } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Logo from '../assets/New-Xure-Logo.png';
+import Loader from '../assets/X_Logo_Loader.gif';
+import FastImage from 'react-native-fast-image';
+
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -25,13 +29,16 @@ const LoginScreen = ({ navigation }) => {
   const [usernameTouched, setUsernameTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
 
+
   const handleLogin = async () => {
     if (!username || !password) {
       Alert.alert('Validation Error', 'Please enter both username and password.');
       return;
     }
 
+
     setIsLoading(true);
+
 
     try {
       const response = await axios.post(
@@ -43,8 +50,11 @@ const LoginScreen = ({ navigation }) => {
           app_name: 'xtore',
         }
       );
+     
+
 
       const userData = response.data.XpertData?.[0];
+
 
       if (userData?.token) {
         Alert.alert('Login Successful', `Welcome, ${userData.firstname} ${userData.lastname}!`);
@@ -61,19 +71,31 @@ const LoginScreen = ({ navigation }) => {
     } finally {
       setIsLoading(false);
     }
+   
   };
+
+
+
 
   return (
     <View style={styles.outerContainer}>
       {/* Loading Modal */}
-      <Modal visible={isLoading} transparent animationType="fade">
-        <View style={styles.loadingContainer}>
-          <View style={styles.spinnerBox}>
-            <ActivityIndicator size="large" color="#800080" />
-            <Text style={styles.loadingText}>Logging in...</Text>
-          </View>
-        </View>
-      </Modal>
+     <Modal visible={isLoading} transparent animationType="fade">
+      <View style={styles.overlay} >
+      <View style={styles.centeredGifContainer}>
+  <FastImage
+    source={require('../assets/X_Logo_Loader.gif')}
+    style={styles.gif}
+    resizeMode={FastImage.resizeMode.contain}
+  />
+  </View>
+
+
+  </View>
+</Modal>
+
+
+
 
       <KeyboardAvoidingView
         style={styles.flexOne}
@@ -86,6 +108,7 @@ const LoginScreen = ({ navigation }) => {
         >
           <Image source={Logo} style={styles.logo} resizeMode="contain" />
           <Text style={styles.title}>Sign In</Text>
+
 
           <TextInput
             style={styles.input}
@@ -100,6 +123,7 @@ const LoginScreen = ({ navigation }) => {
           {usernameTouched && username === '' && (
             <Text style={styles.errorText}>Username is required</Text>
           )}
+
 
           <View style={styles.passwordContainer}>
             <TextInput
@@ -124,9 +148,11 @@ const LoginScreen = ({ navigation }) => {
             <Text style={styles.errorText}>Password is required</Text>
           )}
 
+
           <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
             <Text style={styles.loginText}>Login</Text>
           </TouchableOpacity>
+
 
           <View style={styles.forgotPasswordContainer}>
             <TouchableOpacity onPress={() => {}}>
@@ -136,6 +162,7 @@ const LoginScreen = ({ navigation }) => {
         </ScrollView>
       </KeyboardAvoidingView>
 
+
       <View style={styles.bottomContainer}>
         <Text style={styles.dont}>Don't have an account?</Text>
         <TouchableOpacity onPress={() => {}} style={styles.createAccountButton}>
@@ -143,10 +170,15 @@ const LoginScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
+
+
+   
   );
 };
 
+
 export default LoginScreen;
+
 
 const styles = StyleSheet.create({
   outerContainer: {
@@ -283,4 +315,37 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: 'bold',
   },
+  gif: {
+    width: 100,
+    height: 100,
+ 
+ justifyContent: 'center',
+    alignItems: 'center',
+  },
+    background: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 'auto',
+    height:'auto',
+  },
+   overlay: {
+    ...StyleSheet.absoluteFillObject, 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+centeredGifContainer: {
+    width: 200,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+
+
+
 });
+
+
+
